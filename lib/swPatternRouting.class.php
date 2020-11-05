@@ -157,5 +157,22 @@ class swPatternRouting extends sfPatternRouting
     return $route_container->getRoute($name);
   }
 
+    /**
+     * Converts defined route into an sfRoute object. Operation is memoized.
+     *
+     * @param string $routeName
+     * @return sfRoute
+     */
+    private function loadRoute($routeName)
+    {
+        $serialized = $this->routes[$routeName];
+        $unserialized = unserialize($serialized);
+        if (false === $unserialized) {
+            throw new sfConfigurationException(sprintf('Cannot unserialize route "%s"', $routeName));
+        }
 
+        $this->routes[$routeName] = $unserialized;
+
+        return $unserialized;
+    }
 }
